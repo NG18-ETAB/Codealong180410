@@ -104,13 +104,14 @@ namespace Codealong180410
                                  select a;
 
 
-            foreach (var a in filterdShelter)
+            foreach (Animal a in filterdShelter)
             {
                 Console.WriteLine($"{a.Name} is {a.Age} years old and has {a.NrOfLegs} legs, is a {a.Species} and is {(!a.IsTame ? "not " : "")}tame");
             }
 
             Console.WriteLine("\nLINQ Join:");
 
+            // Just a list of pops to use inner join on animals in theShelter
             var presidents = new List<string>()
             {
                 "Billy",
@@ -118,12 +119,25 @@ namespace Codealong180410
                 "Herr Nilsson",
                 "Obama"
             };
+
+            //Take shelter and (inner) join all the list of presidents, matching on Animal.Name (if not found in either list, remove the entry)
+            //Also create a new IEnumerable, looking just like Animal but with a new Name property derived from the list of presidents (NOT THE SAME AS Animal.Name)
+
+            //Old, with an anonymous new type, in the select-clause, which can't be cast to animal
+            //var joinedShelter = from a in theShelter
+            //                    join p in presidents on a.Name equals p
+            //                    select new { Name = "Prez " + p, a.Age, a.NrOfLegs, a.Species, a.IsTame };
+
+            //New, with a known type, in the select-clause, which can be cast back to Animal
             var joinedShelter = from a in theShelter
                                 join p in presidents on a.Name equals p
-                                select new { Name = "Prez " + p, a.Age, a.NrOfLegs, a.Species, a.IsTame };
+                                select new Animal(a.Age, "Prez " + p, a.Species, a.NrOfLegs, a.IsTame);
 
+            //comparison with lambda but with old style, anonymous type
+            var jnSh = theShelter.Join(presidents, a => a.Name, p => p, (a, p) => new { Name = "Prez " + p, a.Age, a.NrOfLegs, a.Species, a.IsTame });
 
-            foreach (var a in joinedShelter)
+            //forcing type to Animal
+            foreach (Animal a in joinedShelter)
             {
                 Console.WriteLine($"{a.Name} is {a.Age} years old and has {a.NrOfLegs} legs, is a {a.Species} and is {(!a.IsTame ? "not " : "")}tame");
             }
