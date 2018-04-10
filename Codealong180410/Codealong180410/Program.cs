@@ -10,6 +10,8 @@ namespace Codealong180410
     {
         static void Main(string[] args)
         {
+            UI ui = new UI();
+            ui.MainMenu();
         }
     }
 }
