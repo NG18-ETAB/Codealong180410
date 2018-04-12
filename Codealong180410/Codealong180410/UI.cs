@@ -121,9 +121,9 @@ namespace Codealong180410
             };
 
             //Take shelter and (inner) join all the list of presidents, matching on Animal.Name (if not found in either list, remove the entry)
-            //Also create a new IEnumerable, looking just like Animal but with a new Name property derived from the list of presidents (NOT THE SAME AS Animal.Name)
+            //Also create new Animals, copying from the original Animal but with a new Name derived from the list of presidents
 
-            //Old, with an anonymous new type, in the select-clause, which can't be cast to animal
+            //Old, with an anonymous new type, in the select-clause, which can't be cast to Animal
             //var joinedShelter = from a in theShelter
             //                    join p in presidents on a.Name equals p
             //                    select new { Name = "Prez " + p, a.Age, a.NrOfLegs, a.Species, a.IsTame };
@@ -141,10 +141,52 @@ namespace Codealong180410
             {
                 Console.WriteLine($"{a.Name} is {a.Age} years old and has {a.NrOfLegs} legs, is a {a.Species} and is {(!a.IsTame ? "not " : "")}tame");
             }
+
+            Console.ReadKey();
+
+            Console.WriteLine("\nBig Test:");
+
+            foreach (Animal a in theShelter)
+            {
+                Console.WriteLine($"{a.Name} is {a.Age} years old and has {a.NrOfLegs} legs, is a {a.Species} and is {(!a.IsTame ? "not " : "")}tame");
+            }
+            Console.WriteLine();
+
+            IEnumerable<Animal> query = null;
+            Animal result = null;
+            try
+            {
+                int i = 5;
+                result = theShelter.OrderBy(a => a.Age).First(a => a.Age > i);
+                query = theShelter.OrderBy(a => a.Age).Where((a) => { return a.Age > i; });
+                Console.WriteLine($"query{i}:{query.First().Name} is {query.First().Age} years old and has {query.First().NrOfLegs} legs, is a {query.First().Species} and is {(!query.First().IsTame ? "not " : "")}tame");
+                i = 44;
+                Console.WriteLine($"query{i}:{query.First().Name} is {query.First().Age} years old and has {query.First().NrOfLegs} legs, is a {query.First().Species} and is {(!query.First().IsTame ? "not " : "")}tame");
+                i = 46;
+                Console.WriteLine($"query{i}:{query.First().Name} is {query.First().Age} years old and has {query.First().NrOfLegs} legs, is a {query.First().Species} and is {(!query.First().IsTame ? "not " : "")}tame");
+                i = 51;
+                Console.WriteLine($"query{i}:{query.First().Name} is {query.First().Age} years old and has {query.First().NrOfLegs} legs, is a {query.First().Species} and is {(!query.First().IsTame ? "not " : "")}tame");
+
+            }
+            catch (Exception)
+            {
+                Console.WriteLine($"Error");
+            }
+
+            Console.WriteLine($"result:{result.Name} is {result.Age} years old and has {result.NrOfLegs} legs, is a {result.Species} and is {(!result.IsTame ? "not " : "")}tame");
+            Console.WriteLine($"query:{query.First().Name} is {query.First().Age} years old and has {query.First().NrOfLegs} legs, is a {query.First().Species} and is {(!query.First().IsTame ? "not " : "")}tame");
+
+            Console.WriteLine("\nReverse:");
+
+            foreach (Animal a in theShelter.OrderByDescending(x => x.Name).ThenBy(x => x.NrOfLegs)) // not thenby descending because reasons
+            {
+                Console.WriteLine($"{a.Name} is {a.Age} years old and has {a.NrOfLegs} legs, is a {a.Species} and is {(!a.IsTame ? "not " : "")}tame");
+            }
         }
 
-        // Method using lambda. Not used in code but more of a test. Takes 2 int and returns the result of "is X bigger than Y". Note the lack of {} and a return statment, cuz lambda creates this from any single line code.
+        // Method using lambda. Method not used in code, just a test. Takes 2 int and returns the result of "is X bigger than Y". Note the lack of {} and a return statment, cuz lambda creates this from any single line code.
         public bool Laaaambert(int x, int y) => x > y;
+
         // Method using lambda
         public int KeySelectorFuncAge(Animal x) => x.Age;
 
